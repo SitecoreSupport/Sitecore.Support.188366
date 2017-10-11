@@ -3,8 +3,10 @@ using Sitecore.FXM.Rules.Contexts;
 using Sitecore.Rules.Conditions;
 using Sitecore.StringExtensions;
 using System;
+using System.Web;
+using Sitecore.FXM.Rules;
 
-namespace Sitecore.FXM.Rules.Conditions
+namespace Sitecore.Support.FXM.Rules.Conditions
 {
     public class CheckRequestPathCondition<T> : StringOperatorCondition<T> where T : RequestRuleContext
     {
@@ -25,7 +27,8 @@ namespace Sitecore.FXM.Rules.Conditions
             {
                 this.Path = "/" + this.Path;
             }
-            return base.Compare(ruleContext.Url.AbsolutePath, this.Path);
+            var decodedAbsolutePath = HttpContext.Current.Server.UrlDecode(ruleContext.Url.AbsolutePath);
+            return base.Compare(decodedAbsolutePath, this.Path);
         }
     }
 }
